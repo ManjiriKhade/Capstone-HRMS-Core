@@ -1,5 +1,11 @@
 package api.employee.constants;
 
+
+/**
+ * Declares the Database connection details and queries
+ * @author manjiri
+ *
+ */
 public class DBConnectionDetails {
 
 	public static final String DB_URL="jdbc:mysql://localhost:3306/HRMSdb";

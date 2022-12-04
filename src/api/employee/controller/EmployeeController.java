@@ -11,21 +11,36 @@ import api.employee.exception.EmployeeException;
 import api.employee.service.EmployeeService;
 import api.employee.service.EmployeeServiceImpl;
 
+/**
+ * 
+ * @author manjiri
+ *
+ */
 public class EmployeeController {
 
 	UserCommandLineInputData userDataObj = null;
 	EmployeeService empService = new EmployeeServiceImpl();
 
-	public List<Employee> getDataPerUserAction(int userInput, Employee emp, String userSearchData,UserCommandLineInputData userDataObj)
-			throws EmployeeException {
+	/**
+	 * executes appropriate service/dao layer based on user input
+	 * 
+	 * @param userInput
+	 * @param emp
+	 * @param userSearchData
+	 * @param userDataObj
+	 * @return
+	 * @throws EmployeeException
+	 */
+	public List<Employee> getDataPerUserAction(int userInput, Employee emp, String userSearchData,
+			UserCommandLineInputData userDataObj) throws EmployeeException {
 		List<Employee> empList = new ArrayList<Employee>();
-		Set<Entry<String,List<Employee>>> departmentWiseEmpList;
-		Set<Entry<String,Double>> departmentWiseAvgSalaryList;
+		Set<Entry<String, List<Employee>>> departmentWiseEmpList;
+		Set<Entry<String, Double>> departmentWiseAvgSalaryList;
 		switch (userInput) {
 		case 1:
 			empService.addEmployee(emp);
 			break;
-		case 2:	
+		case 2:
 			Employee empDataToEdit = null;
 			empDataToEdit = copyUserData(userDataObj);
 			empService.editEmployee(empDataToEdit);
@@ -66,6 +81,12 @@ public class EmployeeController {
 
 	}
 
+	/**
+	 * copies Employee DTO to Employee Entity
+	 * 
+	 * @param userInputObj
+	 * @return
+	 */
 	private Employee copyUserData(UserCommandLineInputData userInputObj) {
 		Employee empDataToEdit = new Employee();
 		empDataToEdit.setEmployeeId(userInputObj.getEmployeeId());
@@ -73,14 +94,25 @@ public class EmployeeController {
 		empDataToEdit.setMiddleName(userInputObj.getMiddleName());
 		empDataToEdit.setLastName(userInputObj.getLastName());
 		empDataToEdit.setGender(userInputObj.getGender());
-		//empDataToEdit.setDOB(userInputObj.getFirstName());
+		empDataToEdit.setDob(userInputObj.getDob());
 		empDataToEdit.setEmailId(userInputObj.getEmailId());
 		empDataToEdit.setMaritalStatus(userInputObj.getMaritalStatus());
 		empDataToEdit.setDepartment(userInputObj.getDepartment());
 		empDataToEdit.setSalary(userInputObj.getSalary());
 		empDataToEdit.setMobileNumber(userInputObj.getMobileNumber());
-        System.out.println("empDataToEdit - "+empDataToEdit);
+		System.out.println("empDataToEdit - " + empDataToEdit);
 		return empDataToEdit;
 	}
 
+	/**
+	 * displays All Employees from DB
+	 * 
+	 * @return
+	 * @throws EmployeeException
+	 */
+	public List<Employee> displayAllEmployees() throws EmployeeException {
+		List<Employee> empList;
+		empList = empService.getAllEmployees();
+		return empList;
+	}
 }

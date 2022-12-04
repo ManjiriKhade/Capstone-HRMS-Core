@@ -1,7 +1,11 @@
 package api.employee.entity;
 
 import java.sql.Date;
-
+/**
+ * 
+ * @author manjiri
+ *
+ */
 public class Employee {
 
 	private long employeeId;

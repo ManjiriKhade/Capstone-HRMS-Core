@@ -15,8 +15,18 @@ import api.employee.constants.*;
 import api.employee.exception.*;
 import api.employee.entity.*;
 
+/**
+ * 
+ * @author manjiri
+ *
+ */
 public class EmployeeDaoImpl implements EmployeeDao {
 
+	/**
+	 * add Employee Entry in DB
+	 * 
+	 * @param Employee
+	 */
 	@Override
 	public int registerEmployee(Employee emp) throws EmployeeException {
 		int result = 0;
@@ -36,7 +46,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			preparedStatement.setString(8, emp.getMobileNumber());
 			preparedStatement.setString(9, emp.getDepartment());
 			preparedStatement.setString(10, emp.getStatus());
-			preparedStatement.setInt(11,emp.getSalary() );
+			preparedStatement.setInt(11, emp.getSalary());
 			// Step 3: Execute the query or update query
 			result = preparedStatement.executeUpdate();
 
@@ -54,8 +64,9 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return result;
 	}
 
-
-
+	/**
+	 * fetches all Employee in DB
+	 */
 	@Override
 	public List<Employee> displayAllEmployees() throws EmployeeException {
 		List<Employee> employees = null;
@@ -63,7 +74,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		ResultSet empResultSet;
 
 		try {
-			 conn = Connect.getConnection();
+			conn = Connect.getConnection();
 			// Step 2:Create a statement using connection object
 			PreparedStatement preparedStatement = conn.prepareStatement(DBConnectionDetails.SQL_SELECT_EMPLOYEE);
 			// Step 3: Execute the query or update query
@@ -78,18 +89,18 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		} catch (Exception ce) {
 			throw new EmployeeException(ce, ErrorCode.SQL_UNKNOWN_ERROR);
 		}
-		return employees;	
+		return employees;
 
 	}
 
-
-
 	/**
+	 * reads employee record from table
+	 * 
 	 * @param employees
 	 * @param empResultSet
 	 * @throws SQLException
 	 */
-	private List<Employee> readDBEmployeeRecord( ResultSet empResultSet) throws SQLException {
+	private List<Employee> readDBEmployeeRecord(ResultSet empResultSet) throws SQLException {
 		List<Employee> employees = null;
 		if (empResultSet.next() == false) {
 			System.out.println("No Record found for given Employee ID - ");
@@ -115,6 +126,12 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return employees;
 	}
 
+	/**
+	 * deletes employee record from table
+	 * 
+	 * @param empID
+	 * @throws EmployeeException
+	 */
 	@Override
 	public int deleteEmployee(int empID) throws EmployeeException {
 		int result;
@@ -144,8 +161,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return result;
 	}
 
-
-
+	/**
+	 * fetch the employee record from table with given empId and then perform edit
+	 * operation
+	 * 
+	 * @param Employee emp
+	 * @throws EmployeeException
+	 */
 	@Override
 	public void editEmployee(Employee emp) throws EmployeeException {
 		List<Employee> employees = new ArrayList<Employee>();
@@ -169,7 +191,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
 					System.out.println("Employee with employee id - " + emp.getEmployeeId() + " succesfully updated.");
 				}
 			}
-			
 
 		} catch (ClassNotFoundException e) {
 			throw new EmployeeException(e, ErrorCode.LOAD_DRIVER_ERROR);
@@ -181,35 +202,48 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
 	}
 
-
+	/**
+	 * edit employee record from table
+	 * 
+	 * @param Employee emp
+	 * @throws EmployeeException
+	 */
 	private int editEmployeeUsingUserInput(Employee dbEmployee, Employee userInputEmployee) throws EmployeeException {
 		Connection conn = null;
 		int result = 0;
 
-
 		try {
 			conn = Connect.getConnection();
 			// Step 2:Create a statement using connection object
-			PreparedStatement preparedStatement = conn
-					.prepareStatement(DBConnectionDetails.SQL_EDIT_EMPLOYEE);
-	//		preparedStatement.setLong(1, emp.getEmployeeId());
+			PreparedStatement preparedStatement = conn.prepareStatement(DBConnectionDetails.SQL_EDIT_EMPLOYEE);
+			// preparedStatement.setLong(1, emp.getEmployeeId());
 			// Step 3: Execute the query or update query
-			preparedStatement.setString(1, userInputEmployee.getFirstName()!= null ? userInputEmployee.getFirstName():dbEmployee.getFirstName());
-			preparedStatement.setString(2, userInputEmployee.getMiddleName()!= null ?userInputEmployee.getMiddleName():dbEmployee.getMiddleName());
-			preparedStatement.setString(3, userInputEmployee.getLastName()!= null?userInputEmployee.getLastName():dbEmployee.getLastName());
-			preparedStatement.setDate(4, userInputEmployee.getDob()!=null?userInputEmployee.getDob():dbEmployee.getDob());
-			preparedStatement.setString(5, userInputEmployee.getEmailId()!=null?userInputEmployee.getEmailId():dbEmployee.getEmailId());
-			preparedStatement.setString(6, userInputEmployee.getGender()!=null?userInputEmployee.getGender():dbEmployee.getGender());
-			preparedStatement.setString(7, userInputEmployee.getMaritalStatus()!=null?userInputEmployee.getMaritalStatus():dbEmployee.getMaritalStatus());
-			preparedStatement.setString(8, userInputEmployee.getMobileNumber()!=null?userInputEmployee.getMobileNumber():dbEmployee.getMobileNumber());
-			preparedStatement.setString(9, userInputEmployee.getDepartment()!=null?userInputEmployee.getDepartment():dbEmployee.getDepartment());
+			preparedStatement.setString(1, userInputEmployee.getFirstName() != null ? userInputEmployee.getFirstName()
+					: dbEmployee.getFirstName());
+			preparedStatement.setString(2, userInputEmployee.getMiddleName() != null ? userInputEmployee.getMiddleName()
+					: dbEmployee.getMiddleName());
+			preparedStatement.setString(3, userInputEmployee.getLastName() != null ? userInputEmployee.getLastName()
+					: dbEmployee.getLastName());
+			preparedStatement.setDate(4,
+					userInputEmployee.getDob() != null ? userInputEmployee.getDob() : dbEmployee.getDob());
+			preparedStatement.setString(5,
+					userInputEmployee.getEmailId() != null ? userInputEmployee.getEmailId() : dbEmployee.getEmailId());
+			preparedStatement.setString(6,
+					userInputEmployee.getGender() != null ? userInputEmployee.getGender() : dbEmployee.getGender());
+			preparedStatement.setString(7,
+					userInputEmployee.getMaritalStatus() != null ? userInputEmployee.getMaritalStatus()
+							: dbEmployee.getMaritalStatus());
+			preparedStatement.setString(8,
+					userInputEmployee.getMobileNumber() != null ? userInputEmployee.getMobileNumber()
+							: dbEmployee.getMobileNumber());
+			preparedStatement.setString(9, userInputEmployee.getDepartment() != null ? userInputEmployee.getDepartment()
+					: dbEmployee.getDepartment());
 			preparedStatement.setString(10, dbEmployee.getStatus());
-			preparedStatement.setInt(11,userInputEmployee.getSalary()!=0 ?userInputEmployee.getSalary() :dbEmployee.getSalary());
+			preparedStatement.setInt(11,
+					userInputEmployee.getSalary() != 0 ? userInputEmployee.getSalary() : dbEmployee.getSalary());
 			preparedStatement.setLong(12, dbEmployee.getEmployeeId());
 			// Step 3: Execute the query or update query
 			result = preparedStatement.executeUpdate();
-
-		
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -224,5 +258,5 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		return result;
 
 	}
-	
+
 }

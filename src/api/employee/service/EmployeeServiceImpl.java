@@ -12,15 +12,26 @@ import api.employee.dao.EmployeeDaoImpl;
 import api.employee.entity.Employee;
 import api.employee.exception.EmployeeException;
 
+/**
+ * 
+ * @author manjiri
+ *
+ */
 public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeDao empDao = new EmployeeDaoImpl();
 
+	/**
+	 * add new record in Employee table
+	 */
 	@Override
 	public int addEmployee(Employee emp) throws EmployeeException {
 		return empDao.registerEmployee(emp);
 
 	}
 
+	/**
+	 * reads all employee records from db
+	 */
 	@Override
 	public List<Employee> getAllEmployees() throws EmployeeException {
 		System.out.println("EmpService - getAllEmployees - ");
@@ -28,6 +39,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return empDao.displayAllEmployees();
 	}
 
+	/**
+	 * returns employee records for specified marital status
+	 */
 	@Override
 	public List<Employee> searchEmployeeOnMaritalstatus(String maritalStatus) throws EmployeeException {
 		List<Employee> empList = null;
@@ -42,6 +56,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return empList;
 	}
 
+	/**
+	 * returns employee records for specified gender
+	 */
 	@Override
 	public List<Employee> searchEmployeeOnGender(String gender) throws EmployeeException {
 		List<Employee> empList = null;
@@ -56,6 +73,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return empList;
 	}
 
+	/**
+	 * returns employee records for specified contact_number
+	 */
 	@Override
 	public List<Employee> searchEmployeeOnContactNumber(String contactNumber) throws EmployeeException {
 		List<Employee> empList = null;
@@ -69,6 +89,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return empList;
 	}
 
+	/**
+	 * returns employee records for specified name (firstName||middleName||lastName)
+	 */
 	@Override
 	public List<Employee> searchEmployeeOnName(String empName) throws EmployeeException {
 		List<Employee> empList = null;
@@ -85,16 +108,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return empList;
 	}
 
+	/**
+	 * deletes employee records for specified employeeId (it's a soft delete, by
+	 * changing employee status to 'InActive')
+	 */
 	@Override
 	public int deleteEmployee(int empId) throws EmployeeException {
 		return empDao.deleteEmployee(empId);
 	}
 
+	/**
+	 * edits employee record for specified details
+	 */
 	@Override
 	public void editEmployee(Employee emp) throws EmployeeException {
 		empDao.editEmployee(emp);
 	}
 
+	/**
+	 * returns all department list
+	 */
 	public void getListOfAllDepartments() throws EmployeeException {
 		List<Employee> empList = null;
 		System.out.println("\nFetching Department List ");
@@ -102,6 +135,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		empList.stream().map(Employee::getDepartment).distinct().forEach(System.out::println);
 	}
 
+	/**
+	 * returns employeeList working in specified department.
+	 */
 	@Override
 	public List<Employee> getEmpListForInputDepartment(String departmentName) throws EmployeeException {
 		List<Employee> empList = null;
@@ -120,14 +156,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 				empList.stream().forEach(System.out::println);
 				System.out.println("----------------------------");
 				departmentFound = true;
-			} 
+			}
 		}
-		if(!departmentFound) {
+		if (!departmentFound) {
 			System.out.println("No employee record found with Department name :: " + departmentName);
 		}
 		return empList;
 	}
 
+	/**
+	 * returns department wise list of employees
+	 */
 	@Override
 	public Set<Entry<String, List<Employee>>> getEmpListForAllDepartment() throws EmployeeException {
 		List<Employee> empList = null;
@@ -148,20 +187,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return empEntrySet;
 	}
 
+	/**
+	 * returns average salary for each department
+	 */
 	@Override
 	public Set<Entry<String, Double>> getAvgSalaryPerDepartment() throws EmployeeException {
 		List<Employee> empList = null;
 		empList = empDao.displayAllEmployees();
-		Map<String, Double> avgSalaryOfDepartments=
-				empList.stream().collect(Collectors.groupingBy(Employee :: getDepartment,Collectors.averagingInt(Employee::getSalary)));
-		 Set<Entry<String, Double>> avgSalEntrySet =  avgSalaryOfDepartments.entrySet();
-			System.out.println("Department     |   Average Salary");
-		 for (Entry<String, Double> entry : avgSalEntrySet) {
-			System.out.println(entry.getKey()+"|"+entry.getValue());
+		Map<String, Double> avgSalaryOfDepartments = empList.stream()
+				.collect(Collectors.groupingBy(Employee::getDepartment, Collectors.averagingInt(Employee::getSalary)));
+		Set<Entry<String, Double>> avgSalEntrySet = avgSalaryOfDepartments.entrySet();
+		System.out.println("Department     |   Average Salary");
+		for (Entry<String, Double> entry : avgSalEntrySet) {
+			System.out.println(entry.getKey() + "|" + entry.getValue());
 		}
-		 
+
 		return avgSalEntrySet;
-		
 
 	}
 

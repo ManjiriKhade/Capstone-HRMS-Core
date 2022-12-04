@@ -1,5 +1,10 @@
 package api.employee.exception;
 
+/**
+ * 
+ * @author manjiri
+ *
+ */
 public class ErrorCode {
 	
 	public static final String INPUT_ERROR = "Invalid Error";
