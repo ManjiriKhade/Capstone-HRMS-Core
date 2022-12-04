@@ -112,8 +112,8 @@ public class HRMSAppData {
 			} while (userInput != 0);
 
 		} catch (Exception e) {
-			System.out.println("I am facing some unknown issue");
-			e.printStackTrace();
+			System.out.println("Please check input you are providing. There is some issue! Exiting....");
+			//e.printStackTrace();
 		} finally {
 			scanner.close();
 		}
@@ -237,7 +237,6 @@ public class HRMSAppData {
 		case 5:
 			System.out.println("Enter the Mobile number to search");
 			userdata = submenuScanner.nextLine();
-			System.out.println("your entered mobile number is - " + userdata);
 
 			break;
 		case 6:

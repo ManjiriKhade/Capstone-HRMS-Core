@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import api.employee.dao.EmployeeDao;
 import api.employee.dao.EmployeeDaoImpl;
@@ -34,7 +35,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 */
 	@Override
 	public List<Employee> getAllEmployees() throws EmployeeException {
-		System.out.println("EmpService - getAllEmployees - ");
 		empDao.displayAllEmployees().stream().forEach(System.out::println);
 		return empDao.displayAllEmployees();
 	}
@@ -44,14 +44,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 */
 	@Override
 	public List<Employee> searchEmployeeOnMaritalstatus(String maritalStatus) throws EmployeeException {
-		List<Employee> empList = null;
-		if (maritalStatus != null) {
-			System.out.println("\nFetching Employee Data for Marital Status - " + maritalStatus + ".....");
+		List<Employee> empList = null,empListForSpecifiedMaritalStatus = null;
+		if (maritalStatus != null && !maritalStatus.isEmpty()) {
 			empList = empDao.displayAllEmployees();
-			empList.stream().filter(e -> e.getMaritalStatus().toLowerCase().matches(maritalStatus.toLowerCase()))
-					.forEach(System.out::println);
+			empListForSpecifiedMaritalStatus = empList.stream().filter(e -> e.getMaritalStatus().toLowerCase().matches(maritalStatus.toLowerCase())).collect(Collectors.toList());
+			if(empListForSpecifiedMaritalStatus.size() >= 1) {
+				empListForSpecifiedMaritalStatus.stream().forEach(System.out::println);
+			}else {
+				System.out.println("\nNo employee record found for specified marital status! "+maritalStatus);
+			}
+					
 		} else {
-			System.out.println("\nPlease provide Marital Status to search! ");
+			System.out.println("\nNo Input provided! Please provide Marital Status to search! ");
 		}
 		return empList;
 	}
@@ -62,13 +66,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public List<Employee> searchEmployeeOnGender(String gender) throws EmployeeException {
 		List<Employee> empList = null;
-		if (gender != null) {
-			System.out.println("\nFetching Employee Data for gender - " + gender + ".....");
+		List<Employee> empListForSpecifiedGender = null;
+		if (gender != null && !gender.isEmpty()) {
 			empList = empDao.displayAllEmployees();
-			empList.stream().filter(e -> e.getGender().toLowerCase().matches(gender.toLowerCase()))
-					.forEach(System.out::println);
+			empListForSpecifiedGender = empList.stream()
+					.filter(e -> e.getGender().toLowerCase().matches(gender.toLowerCase()))
+					.collect(Collectors.toList());
+			if (empListForSpecifiedGender.size() >= 1) {
+				empListForSpecifiedGender.stream().forEach(System.out::println);
+			} else {
+				System.out.println("\nNo employee record found for specified gender! -"+gender);
+			}
 		} else {
-			System.out.println("\nNo Employee record exists for given gender! ");
+			System.out.println("\nNo Input provided! Please provide gender to search! ");
 		}
 		return empList;
 	}
@@ -78,15 +88,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 */
 	@Override
 	public List<Employee> searchEmployeeOnContactNumber(String contactNumber) throws EmployeeException {
-		List<Employee> empList = null;
-		if (contactNumber != null) {
-			System.out.println("Fetching Employee Data for contact number - " + contactNumber + ".....");
+		List<Employee> empList = null, matchFoundList = null;
+		if (contactNumber != null && !contactNumber.isEmpty()) {
 			empList = empDao.displayAllEmployees();
-			empList.stream().filter(e -> e.getMobileNumber().matches(contactNumber)).forEach(System.out::println);
+			matchFoundList = empList.stream().filter(e -> e.getMobileNumber().matches(contactNumber))
+					.collect(Collectors.toList());// forEach(System.out::println);
+			if (matchFoundList.size() >= 1) {
+				matchFoundList.stream().forEach(System.out::println);
+			} else {
+				System.out.println("\nNo record found for mobile number - " + contactNumber);
+			}
 		} else {
-			System.out.println("\nNo Employee record exists for given contact number! ");
+			System.out.println("\nNo Input provided! Please provide contact number to search! ");
 		}
-		return empList;
+		return matchFoundList;
 	}
 
 	/**
@@ -94,16 +109,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 */
 	@Override
 	public List<Employee> searchEmployeeOnName(String empName) throws EmployeeException {
-		List<Employee> empList = null;
-		if (empName != null) {
-			System.out.println("Fetching Employee Data for employee name - " + empName + ".....");
+		List<Employee> empList = null, searchListOnFirstName = null, searchListOnMiddleName = null,searchListOnLastName = null ;
+		if (empName != null && !empName.isEmpty()) {
 			empList = empDao.displayAllEmployees();
-			empList.stream().filter(e -> e.getFirstName().matches(empName)).forEach(System.out::println);
-			empList.stream().filter(e -> e.getMiddleName().matches(empName)).forEach(System.out::println);
-			empList.stream().filter(e -> e.getLastName().matches(empName)).forEach(System.out::println);
-
+			searchListOnFirstName = empList.stream().filter(e -> e.getFirstName().matches(empName)).collect(Collectors.toList());//.forEach(System.out::println);
+			searchListOnMiddleName = empList.stream().filter(e -> e.getMiddleName().matches(empName)).collect(Collectors.toList());//.forEach(System.out::println);
+			searchListOnLastName = empList.stream().filter(e -> e.getLastName().matches(empName)).collect(Collectors.toList());//.forEach(System.out::println);
+			
+			if(searchListOnFirstName.size()<1 && searchListOnMiddleName.size()<1 && searchListOnLastName.size()<1 ) {
+				System.out.println("No Employee Record exists for a specified Name! "+empName);
+			}else {
+				searchListOnFirstName.stream().forEach(System.out::println);
+				searchListOnMiddleName.stream().forEach(System.out::println);
+				searchListOnLastName.stream().forEach(System.out::println);
+			}
 		} else {
-			System.out.println("No Employee Record exists for a given Name! ");
+			System.out.println("No Input provided! Please provide Employee Name to search! ");
 		}
 		return empList;
 	}
